@@ -5,4 +5,4 @@ steps:
   args: ['push', 'us-central1-docker.pkg.dev/crucial-bloom-441721-v1/dhruv-100945912/$COMMIT_SHA']
 
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET
+  logging: CLOUD_LOGGING_ONLY
