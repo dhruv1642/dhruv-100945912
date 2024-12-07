@@ -1,8 +1,31 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/crucial-bloom-441721-v1/dhruv-100945912/$COMMIT_SHA', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-central1-docker.pkg.dev/crucial-bloom-441721-v1/dhruv-100945912/$COMMIT_SHA']
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/My Project 40157/dhruv-100945912/app:latest', '.']
+    id: 'Build Docker Image'
+
+  # Step 2: Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/My Project 40157/dhruv-100945912/app:latest']
+    id: 'Push to Artifact Registry'
+  
+  # Step 3: Deploy the Docker image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 
+      'deploy', 
+      'app',
+      '--image', 
+      'us-central1-docker.pkg.dev/My Project 40157/dhruv-100945912/app:latest',
+      '--region', 
+      'us-central1',
+      '--platform',
+      'managed',
+      '--allow-unauthenticated'
+    ]
+    id: 'Deploy to Cloud Run'
 
 options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
   logging: CLOUD_LOGGING_ONLY
